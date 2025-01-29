@@ -57,10 +57,10 @@ namespace TetrisML
             };
             gameTimer.Tick += GameLoop;
         }
-
-        private Piece GenerateNewPiece()
-        {
-            return new Piece(random.Next(7));
+        
+            private Piece GenerateNewPiece()
+        {   
+                   return new Piece(random.Next(7));
         }
 
         private void GameLoop(object sender, EventArgs e)

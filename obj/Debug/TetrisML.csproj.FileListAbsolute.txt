@@ -7,3 +7,12 @@ C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\TetrisML\obj\Debug\Tetris
 C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\TetrisML\obj\Debug\TetrisML.csproj.CoreCompileInputs.cache
 C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\TetrisML\obj\Debug\TetrisML.exe
 C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\TetrisML\obj\Debug\TetrisML.pdb
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\bin\Debug\TetrisML.exe.config
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\bin\Debug\TetrisML.exe
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\bin\Debug\TetrisML.pdb
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.csproj.AssemblyReference.cache
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.Properties.Resources.resources
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.csproj.GenerateResource.cache
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.csproj.CoreCompileInputs.cache
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.exe
+C:\Users\Alexandre\Desktop\GEI1076\GEI1076H25\TetrisML\GEI1076_TetrisML\obj\Debug\TetrisML.pdb

@@ -16,10 +16,10 @@ namespace TetrisML
         // Paramètres ajustables de l'IA
         public class AIParameters
         {
-            public double HeightWeight { get; set; } = -0.510066;      // Pénalise la hauteur globale
-            public double HolesWeight { get; set; } = -0.35663;        // Pénalise les trous
-            public double CompleteLinesWeight { get; set; } = 0.760666; // Récompense les lignes complètes
-            public double BumpinessWeight { get; set; } = -0.184483;   // Pénalise les différences de hauteur
+            public double HeightWeight { get; set; } = 0.00;      // Pénalise la hauteur globale
+            public double HolesWeight { get; set; } = 0.00;        // Pénalise les trous
+            public double CompleteLinesWeight { get; set; } = 0.00; // Récompense les lignes complètes
+            public double BumpinessWeight { get; set; } = 0.00;   // Pénalise les différences de hauteur
         }
 
         // Structure pour stocker un mouvement possible
@@ -32,7 +32,7 @@ namespace TetrisML
 
         // Méthode principale pour trouver le meilleur mouvement
         public PossibleMove FindBestMove(int[,] grid, Piece currentPiece)
-        {
+               {
             var bestMove = new PossibleMove { Score = double.MinValue };
 
             // Essayer toutes les rotations possibles
