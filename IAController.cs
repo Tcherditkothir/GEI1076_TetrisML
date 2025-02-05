@@ -1,11 +1,56 @@
-﻿using System;
+﻿/*	Bref
+IAController centralise toute la logique de décision de l'IA pour le jeu Tetris, 
+en évaluant et en choisissant le meilleur mouvement possible pour optimiser la position de la pièce sur la grille.
+
+---
+la classe IAController, sert à gérer l'intelligence artificielle (IA) dans le jeu de Tetris. Voici en résumé sa raison d'être :
+
+Évaluation des Positions :
+La classe définit des paramètres ajustables (via la classe interne AIParameters) qui attribuent des poids à différents aspects de la grille (hauteur, trous, lignes complètes, irrégularité). Ces poids servent à calculer un score pour chaque configuration possible de la pièce.
+
+Simulation des Mouvements :
+Grâce à la méthode FindBestMove, l'IA explore toutes les rotations possibles et les translations horizontales pour la pièce actuelle. Pour chaque configuration, elle simule la chute de la pièce (via la méthode SimulateDrop) et évalue la position obtenue.
+
+Sélection du Meilleur Mouvement :
+En comparant les scores obtenus pour chaque configuration, l'IA détermine le mouvement (rotation et déplacement) qui maximise le score. Ce mouvement est encapsulé dans la structure PossibleMove.
+
+Mise à Jour et Paramétrage :
+La classe offre également la possibilité de mettre à jour les paramètres de l'IA via la méthode UpdateParameters, permettant d'ajuster dynamiquement le comportement de l'IA en fonction des préférences ou d'un apprentissage automatique.
+	 
+*/
+
+/*	Explications des principes POO appliqués :
+
+Encapsulation
+Les champs privés (par exemple, currentParameters) et les méthodes privées (par exemple, CalculateAggregateHeight, IsValidPosition) cachent l’implémentation interne.
+Les classes et structures (comme IAController, AIParameters, PossibleMove) regroupent les données et les comportements associés.
+
+Abstraction
+Les méthodes publiques comme FindBestMove offrent une interface simple pour interagir avec l’IA sans exposer les détails complexes du calcul et de la simulation.
+La logique interne (calcul de la hauteur, des trous, etc.) est décomposée en méthodes privées pour simplifier la compréhension.
+
+Composition
+La classe IAController utilise une instance de AIParameters pour gérer ses paramètres, illustrant ainsi la composition (un objet est constitué d’autres objets).
+
+Polymorphisme (potentiel)
+La méthode Clone() sur l’objet Piece est utilisée sans connaître sa classe concrète, ce qui permettrait, dans un système complet, d’avoir différentes implémentations de pièces avec leur propre comportement (via héritage et substitution de méthodes).
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace TetrisML
 {
+    // La classe IAController illustre plusieurs principes de la Programmation Orientée Objet (POO) :
+    // - Encapsulation : Les données (champs) et comportements (méthodes) liés à l'IA sont regroupés dans cette classe.
+    // - Abstraction : Les détails complexes (calcul du meilleur mouvement, évaluation de la grille, etc.) sont masqués derrière des méthodes bien définies.
+    // - Composition : IAController utilise des objets d'autres classes (comme AIParameters) pour construire son comportement.
+    // - Polymorphisme (potentiel) : Par exemple, la méthode Clone() sur l'objet Piece permet, dans une architecture plus complète, de traiter différentes pièces via une interface commune.
     public class IAController
     {
+        // Encapsulation et Composition :
+        // Le champ privé currentParameters regroupe les paramètres de l'IA et n'est accessible/modifiable que via des méthodes dédiées.
         private AIParameters currentParameters;
 
         public IAController()
@@ -13,16 +58,24 @@ namespace TetrisML
             currentParameters = new AIParameters();
         }
 
-        // Paramètres ajustables de l'IA
+        // ====================================================
+        // Classe imbriquée AIParameters
+        // ====================================================
+        // Encapsulation : Les paramètres de l'IA sont regroupés dans cette classe, qui expose des propriétés
+        // pour interagir avec ces données sans exposer leur implémentation interne.
         public class AIParameters
         {
-            public double HeightWeight { get; set; } = 0.00;      // Pénalise la hauteur globale
-            public double HolesWeight { get; set; } = 0.00;        // Pénalise les trous
-            public double CompleteLinesWeight { get; set; } = 0.00; // Récompense les lignes complètes
-            public double BumpinessWeight { get; set; } = 0.00;   // Pénalise les différences de hauteur
+            public double HeightWeight { get; set; } = -0.510066;      // Pénalise la hauteur globale
+            public double HolesWeight { get; set; } = -0.35663;        // Pénalise les trous
+            public double CompleteLinesWeight { get; set; } = 0.760666; // Récompense les lignes complètes
+            public double BumpinessWeight { get; set; } = -0.184483;   // Pénalise les différences de hauteur
         }
 
-        // Structure pour stocker un mouvement possible
+        // ====================================================
+        // Structure PossibleMove
+        // ====================================================
+        // Abstraction : La structure PossibleMove encapsule les informations d'un mouvement possible
+        // (rotation, translation, score) sans exposer les détails de son utilisation dans l'IA.
         public struct PossibleMove
         {
             public int Rotation { get; set; }     // Nombre de rotations à effectuer
@@ -30,14 +83,21 @@ namespace TetrisML
             public double Score { get; set; }      // Score évalué pour ce mouvement
         }
 
+        // ====================================================
         // Méthode principale pour trouver le meilleur mouvement
+        // ====================================================
+        // Abstraction : La méthode FindBestMove offre une interface simple pour déterminer le meilleur mouvement,
+        // cachant la complexité de l'exploration des rotations et translations possibles.
+        // Polymorphisme (potentiel) : La méthode Clone() utilisée sur currentPiece permet de travailler avec différentes
+        // implémentations de Piece (si Piece est une classe de base dans une hiérarchie).
         public PossibleMove FindBestMove(int[,] grid, Piece currentPiece)
-               {
+        {
             var bestMove = new PossibleMove { Score = double.MinValue };
 
             // Essayer toutes les rotations possibles
             for (int rotation = 0; rotation < 4; rotation++)
             {
+                // Utilisation du polymorphisme : Clone permet de créer une copie de la pièce sans connaître sa classe concrète.
                 var testPiece = currentPiece.Clone();
                 for (int i = 0; i < rotation; i++)
                     testPiece.Rotate();
@@ -65,13 +125,20 @@ namespace TetrisML
             return bestMove;
         }
 
-        // Mise à jour des paramètres depuis l'interface utilisateur
+        // ====================================================
+        // Méthode pour mettre à jour les paramètres de l'IA
+        // ====================================================
+        // Encapsulation : La modification de l'état interne (currentParameters) se fait via cette méthode,
+        // garantissant ainsi un contrôle sur la manière dont les données sont modifiées.
         public void UpdateParameters(AIParameters newParams)
         {
             currentParameters = newParams;
         }
 
-        // Évaluation d'une position
+        // ====================================================
+        // Méthode d'évaluation d'une position sur la grille
+        // ====================================================
+        // Abstraction : Les détails du calcul de l'évaluation sont cachés dans des méthodes privées (CalculateAggregateHeight, etc.).
         private double EvaluatePosition(int[,] grid)
         {
             return currentParameters.HeightWeight * CalculateAggregateHeight(grid)
@@ -80,7 +147,10 @@ namespace TetrisML
                  + currentParameters.BumpinessWeight * CalculateBumpiness(grid);
         }
 
+        // ====================================================
         // Calcule la hauteur totale de toutes les colonnes
+        // ====================================================
+        // Abstraction : La méthode encapsule le calcul de la hauteur totale en masquant l'itération sur chaque colonne.
         private int CalculateAggregateHeight(int[,] grid)
         {
             int totalHeight = 0;
@@ -94,7 +164,10 @@ namespace TetrisML
             return totalHeight;
         }
 
+        // ====================================================
         // Calcule le nombre de trous (cases vides avec des blocs au-dessus)
+        // ====================================================
+        // Abstraction : Les détails de la détection des trous dans la grille sont cachés dans cette méthode.
         private int CalculateHoles(int[,] grid)
         {
             int holes = 0;
@@ -116,7 +189,10 @@ namespace TetrisML
             return holes;
         }
 
+        // ====================================================
         // Calcule le nombre de lignes complètes
+        // ====================================================
+        // Abstraction : La vérification et le comptage des lignes complètes sont encapsulés dans cette méthode.
         private int CalculateCompleteLines(int[,] grid)
         {
             int completeLines = 0;
@@ -141,7 +217,10 @@ namespace TetrisML
             return completeLines;
         }
 
-        // Calcule l'irrégularité de la surface (différences de hauteur entre colonnes adjacentes)
+        // ====================================================
+        // Calcule l'irrégularité de la surface (bumpiness)
+        // ====================================================
+        // Abstraction : Le calcul des différences de hauteur entre colonnes est masqué dans cette méthode.
         private int CalculateBumpiness(int[,] grid)
         {
             int bumpiness = 0;
@@ -161,7 +240,10 @@ namespace TetrisML
             return bumpiness;
         }
 
+        // ====================================================
         // Obtient la hauteur d'une colonne spécifique
+        // ====================================================
+        // Abstraction : La méthode encapsule le processus de calcul de la hauteur d'une colonne, masquant les détails d'itération.
         private int GetColumnHeight(int[,] grid, int x)
         {
             int height = grid.GetLength(0);
@@ -175,11 +257,17 @@ namespace TetrisML
             return 0;
         }
 
+        // ====================================================
         // Simule la chute d'une pièce à une position donnée
+        // ====================================================
+        // Abstraction : La méthode SimulateDrop masque la complexité de la simulation d'une chute de pièce dans la grille.
+        // Encapsulation : Elle travaille sur une copie de la grille afin de ne pas modifier l'originale.
         private int[,] SimulateDrop(int[,] originalGrid, Piece piece, int xPosition)
         {
+            // Création d'une copie de la grille (encapsulation des données)
             int[,] simulatedGrid = (int[,])originalGrid.Clone();
             int height = simulatedGrid.GetLength(0);
+            // Utilisation du polymorphisme potentiel via la méthode Clone de Piece
             piece = piece.Clone();
             piece.X = xPosition;
 
@@ -196,7 +284,7 @@ namespace TetrisML
                 finalY = y;
             }
 
-            // Si la position finale est valide, placer la pièce
+            // Placement de la pièce à la position finale trouvée
             piece.Y = finalY;
             if (IsValidPosition(simulatedGrid, piece))
             {
@@ -216,7 +304,10 @@ namespace TetrisML
             return null;
         }
 
-        // Vérifie si une position est valide
+        // ====================================================
+        // Vérifie si une position est valide pour une pièce
+        // ====================================================
+        // Abstraction : La méthode IsValidPosition cache les détails de la validation des positions d'une pièce dans la grille.
         private bool IsValidPosition(int[,] grid, Piece piece)
         {
             foreach (var block in piece.GetCurrentRotationBlocks())
